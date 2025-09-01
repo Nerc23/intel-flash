@@ -1,10 +1,64 @@
 
-import React from 'react';
-import { Brain, Sparkles, BookOpen } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Brain, Sparkles, BookOpen, LogIn } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import UserNav from './UserNav';
 
 const HeroSection = () => {
+  const { user, loading } = useAuth();
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (user) {
+        const { supabase } = await import('@/integrations/supabase/client');
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        setUserProfile(data);
+      }
+    };
+
+    if (user && !loading) {
+      fetchUserProfile();
+    }
+  }, [user, loading]);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col px-4 overflow-hidden">
+      {/* Navigation Bar */}
+      <nav className="relative z-20 flex items-center justify-between py-6 max-w-6xl mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+            <Brain className="w-6 h-6 text-primary" />
+          </div>
+          <span className="text-xl font-bold">AI Study Buddy</span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {loading ? (
+            <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+          ) : user ? (
+            <UserNav 
+              userPlan={userProfile?.plan_type} 
+              userName={userProfile?.display_name} 
+            />
+          ) : (
+            <Button 
+              onClick={() => window.location.href = '/auth'}
+              className="btn-secondary flex items-center gap-2"
+            >
+              <LogIn className="w-4 h-4" />
+              Sign In
+            </Button>
+          )}
+        </div>
+      </nav>
+
+      <div className="flex-1 flex items-center justify-center">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/5 animate-float" 
@@ -73,9 +127,9 @@ const HeroSection = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button 
             className="btn-hero"
-            onClick={() => window.location.href = '/generator'}
+            onClick={() => window.location.href = user ? '/generator' : '/auth'}
           >
-            Start Creating Flashcards
+            {user ? 'Continue Creating Flashcards' : 'Start Creating Flashcards'}
           </button>
           <button 
             className="btn-secondary"
@@ -90,6 +144,7 @@ const HeroSection = () => {
           <Sparkles className="w-4 h-4 text-accent" />
           <span className="text-sm font-medium text-accent">Free to start • Premium features available</span>
         </div>
+      </div>
       </div>
     </section>
   );
