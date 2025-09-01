@@ -117,6 +117,7 @@ const PricingSection = () => {
                 {/* CTA Button */}
                 <Button 
                   className={`w-full ${plan.buttonVariant === 'hero' ? 'btn-hero' : 'btn-secondary'}`}
+                  onClick={() => window.location.href = plan.popular ? '/generator' : '/demo'}
                 >
                   {plan.popular && <Zap className="w-4 h-4 mr-2" />}
                   {plan.buttonText}

@@ -7,40 +7,40 @@
 
 @layer base {
   :root {
-    /* Core Brand Colors - Deep Purple & Electric Blue */
-    --primary: 258 90% 66%; /* Electric purple */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 91% 65%; /* Bright blue */
-    --secondary-foreground: 0 0% 100%;
+    /* Core Brand Colors - Light & Friendly */
+    --primary: 258 70% 75%; /* Light purple */
+    --primary-foreground: 0 0% 15%;
+    --secondary: 220 60% 80%; /* Light blue */
+    --secondary-foreground: 0 0% 15%;
     
     /* Educational Accents */
-    --accent: 160 84% 55%; /* Success green */
-    --accent-foreground: 0 0% 100%;
-    --warning: 38 92% 58%; /* Bright orange */
-    --warning-foreground: 0 0% 100%;
+    --accent: 160 50% 70%; /* Light green */
+    --accent-foreground: 0 0% 15%;
+    --warning: 38 70% 70%; /* Light orange */
+    --warning-foreground: 0 0% 15%;
     
-    /* Neutral System */
-    --background: 240 10% 4%; /* Deep dark */
-    --foreground: 0 0% 98%;
-    --surface: 240 6% 10%; /* Card backgrounds */
-    --surface-foreground: 0 0% 95%;
+    /* Neutral System - Light Theme */
+    --background: 0 0% 98%; /* Light background */
+    --foreground: 0 0% 15%;
+    --surface: 0 0% 100%; /* Pure white cards */
+    --surface-foreground: 0 0% 20%;
     
     /* Interactive Elements */
-    --muted: 240 5% 16%;
-    --muted-foreground: 240 5% 65%;
-    --border: 240 6% 20%;
-    --input: 240 6% 15%;
-    --ring: 258 90% 66%;
+    --muted: 240 5% 90%;
+    --muted-foreground: 240 5% 45%;
+    --border: 240 5% 85%;
+    --input: 240 5% 96%;
+    --ring: 258 70% 75%;
     
-    /* Educational Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(258 90% 66%) 0%, hsl(220 91% 65%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(240 6% 12%) 0%, hsl(240 6% 8%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(160 84% 55%) 0%, hsl(160 84% 45%) 100%);
+    /* Educational Gradients - Light */
+    --gradient-primary: linear-gradient(135deg, hsl(258 70% 75%) 0%, hsl(220 60% 80%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(160 50% 70%) 0%, hsl(160 50% 65%) 100%);
     
-    /* Shadows for Depth */
-    --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-card-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-flashcard: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    /* Shadows for Depth - Lighter */
+    --shadow-card: 0 2px 8px -1px rgb(0 0 0 / 0.08), 0 1px 3px -1px rgb(0 0 0 / 0.06);
+    --shadow-card-hover: 0 4px 12px -2px rgb(0 0 0 / 0.12), 0 2px 6px -2px rgb(0 0 0 / 0.08);
+    --shadow-flashcard: 0 8px 16px -4px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.08);
     
     --radius: 12px;
   }
@@ -54,8 +54,8 @@
   body {
     @apply bg-background text-foreground font-sans;
     background-image: 
-      radial-gradient(at 20% 80%, hsla(258, 90%, 66%, 0.05) 0px, transparent 50%),
-      radial-gradient(at 80% 20%, hsla(220, 91%, 65%, 0.05) 0px, transparent 50%);
+      radial-gradient(at 20% 80%, hsla(258, 70%, 75%, 0.08) 0px, transparent 50%),
+      radial-gradient(at 80% 20%, hsla(220, 60%, 80%, 0.08) 0px, transparent 50%);
   }
 
   /* Typography Scale */
@@ -202,10 +202,10 @@
 
 @keyframes pulseGlow {
   0%, 100% { 
-    box-shadow: 0 0 5px hsl(258 90% 66% / 0.5);
+    box-shadow: 0 0 5px hsl(258 70% 75% / 0.4);
   }
   50% { 
-    box-shadow: 0 0 20px hsl(258 90% 66% / 0.8), 0 0 30px hsl(220 91% 65% / 0.6);
+    box-shadow: 0 0 20px hsl(258 70% 75% / 0.6), 0 0 30px hsl(220 60% 80% / 0.5);
   }
 }
 

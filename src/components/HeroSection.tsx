@@ -71,10 +71,16 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button className="btn-hero">
+          <button 
+            className="btn-hero"
+            onClick={() => window.location.href = '/generator'}
+          >
             Start Creating Flashcards
           </button>
-          <button className="btn-secondary">
+          <button 
+            className="btn-secondary"
+            onClick={() => window.location.href = '/demo'}
+          >
             View Demo
           </button>
         </div>
