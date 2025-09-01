@@ -64,7 +64,10 @@ const UserNav: React.FC<UserNavProps> = ({ userPlan = 'freemium', userName }) =>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer">
+        <DropdownMenuItem 
+          className="cursor-pointer"
+          onClick={() => window.location.href = '/account-settings'}
+        >
           <Settings className="mr-2 h-4 w-4" />
           <span>Account Settings</span>
         </DropdownMenuItem>

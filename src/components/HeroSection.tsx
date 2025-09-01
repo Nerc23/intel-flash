@@ -131,6 +131,14 @@ const HeroSection = () => {
           >
             {user ? 'Continue Creating Flashcards' : 'Start Creating Flashcards'}
           </button>
+          {user && (
+            <button 
+              className="btn-outline"
+              onClick={() => window.location.href = '/test-knowledge'}
+            >
+              Test Your Knowledge
+            </button>
+          )}
           <button 
             className="btn-secondary"
             onClick={() => window.location.href = '/demo'}

@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Demo from "./pages/Demo";
 import Generator from "./pages/Generator";
+import TestKnowledge from "./pages/TestKnowledge";
+import AccountSettings from "./pages/AccountSettings";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -24,6 +26,16 @@ const App = () => (
           <Route path="/generator" element={
             <ProtectedRoute>
               <Generator />
+            </ProtectedRoute>
+          } />
+          <Route path="/test-knowledge" element={
+            <ProtectedRoute>
+              <TestKnowledge />
+            </ProtectedRoute>
+          } />
+          <Route path="/account-settings" element={
+            <ProtectedRoute>
+              <AccountSettings />
             </ProtectedRoute>
           } />
           <Route path="/auth" element={<Auth />} />
