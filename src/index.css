@@ -1,48 +1,96 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* AI Study Buddy Design System - Educational & Modern */
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
 
 @layer base {
   :root {
-    /* Core Brand Colors - Light & Friendly */
-    --primary: 258 70% 75%; /* Light purple */
-    --primary-foreground: 0 0% 15%;
-    --secondary: 220 60% 80%; /* Light blue */
-    --secondary-foreground: 0 0% 15%;
-    
-    /* Educational Accents */
-    --accent: 160 50% 70%; /* Light green */
-    --accent-foreground: 0 0% 15%;
-    --warning: 38 70% 70%; /* Light orange */
-    --warning-foreground: 0 0% 15%;
-    
-    /* Neutral System - Light Theme */
-    --background: 0 0% 98%; /* Light background */
-    --foreground: 0 0% 15%;
-    --surface: 0 0% 100%; /* Pure white cards */
-    --surface-foreground: 0 0% 20%;
-    
-    /* Interactive Elements */
-    --muted: 240 5% 90%;
-    --muted-foreground: 240 5% 45%;
-    --border: 240 5% 85%;
-    --input: 240 5% 96%;
-    --ring: 258 70% 75%;
-    
-    /* Educational Gradients - Light */
-    --gradient-primary: linear-gradient(135deg, hsl(258 70% 75%) 0%, hsl(220 60% 80%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(160 50% 70%) 0%, hsl(160 50% 65%) 100%);
-    
-    /* Shadows for Depth - Lighter */
-    --shadow-card: 0 2px 8px -1px rgb(0 0 0 / 0.08), 0 1px 3px -1px rgb(0 0 0 / 0.06);
-    --shadow-card-hover: 0 4px 12px -2px rgb(0 0 0 / 0.12), 0 2px 6px -2px rgb(0 0 0 / 0.08);
-    --shadow-flashcard: 0 8px 16px -4px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.08);
-    
-    --radius: 12px;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -52,170 +100,6 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
-    background-image: 
-      radial-gradient(at 20% 80%, hsla(258, 70%, 75%, 0.08) 0px, transparent 50%),
-      radial-gradient(at 80% 20%, hsla(220, 60%, 80%, 0.08) 0px, transparent 50%);
-  }
-
-  /* Typography Scale */
-  .text-hero {
-    @apply text-4xl md:text-6xl font-bold tracking-tight;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .text-subtitle {
-    @apply text-lg md:text-xl text-muted-foreground;
-  }
-
-  .text-card-title {
-    @apply text-xl font-semibold text-foreground;
-  }
-
-  .text-card-content {
-    @apply text-sm text-muted-foreground leading-relaxed;
-  }
-}
-
-@layer components {
-  /* Flashcard Animation System */
-  .flashcard {
-    @apply relative w-full h-64 cursor-pointer;
-    perspective: 1000px;
-    transition: transform 0.2s ease;
-  }
-
-  .flashcard:hover {
-    @apply scale-105;
-  }
-
-  .flashcard-inner {
-    @apply relative w-full h-full transition-transform duration-700;
-    transform-style: preserve-3d;
-  }
-
-  .flashcard.flipped .flashcard-inner {
-    transform: rotateY(180deg);
-  }
-
-  .flashcard-front,
-  .flashcard-back {
-    @apply absolute inset-0 w-full h-full rounded-xl border border-border p-6 flex items-center justify-center text-center;
-    background: var(--gradient-card);
-    box-shadow: var(--shadow-card);
-    backface-visibility: hidden;
-    transition: box-shadow 0.3s ease;
-  }
-
-  .flashcard:hover .flashcard-front,
-  .flashcard:hover .flashcard-back {
-    box-shadow: var(--shadow-card-hover);
-  }
-
-  .flashcard-back {
-    transform: rotateY(180deg);
-  }
-
-  /* Button Variants */
-  .btn-hero {
-    @apply px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300;
-    background: var(--gradient-primary);
-    box-shadow: var(--shadow-card);
-  }
-
-  .btn-hero:hover {
-    @apply scale-105;
-    box-shadow: var(--shadow-card-hover);
-  }
-
-  .btn-secondary {
-    @apply px-6 py-3 font-medium rounded-lg border border-border bg-surface/50 backdrop-blur-sm transition-all duration-300;
-  }
-
-  .btn-secondary:hover {
-    @apply bg-surface border-primary/50 scale-105;
-  }
-
-  /* Card Components */
-  .study-card {
-    @apply rounded-xl border border-border p-6 transition-all duration-300;
-    background: var(--gradient-card);
-    box-shadow: var(--shadow-card);
-  }
-
-  .study-card:hover {
-    @apply border-primary/30;
-    box-shadow: var(--shadow-card-hover);
-  }
-
-  /* Input Styling */
-  .study-input {
-    @apply w-full p-4 rounded-lg border border-border bg-input/50 backdrop-blur-sm transition-all duration-300;
-  }
-
-  .study-input:focus {
-    @apply border-primary ring-2 ring-primary/20 outline-none;
-  }
-
-  /* Progress Indicators */
-  .progress-ring {
-    @apply w-16 h-16 rounded-full p-1;
-    background: var(--gradient-primary);
-  }
-
-  .progress-inner {
-    @apply w-full h-full rounded-full bg-surface flex items-center justify-center text-sm font-semibold;
-  }
-
-  /* Animations */
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .animate-slide-up {
-    animation: slideUp 0.6s ease-out;
-  }
-
-  .animate-pulse-glow {
-    animation: pulseGlow 2s ease-in-out infinite;
-  }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { 
-    box-shadow: 0 0 5px hsl(258 70% 75% / 0.4);
-  }
-  50% { 
-    box-shadow: 0 0 20px hsl(258 70% 75% / 0.6), 0 0 30px hsl(220 60% 80% / 0.5);
-  }
-}
-
-/* Responsive Utilities */
-@media (max-width: 768px) {
-  .flashcard {
-    @apply h-56;
-  }
-  
-  .text-hero {
-    @apply text-3xl;
+    @apply bg-background text-foreground;
   }
 }
