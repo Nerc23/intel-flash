@@ -1,173 +1,214 @@
-
 import React, { useState } from 'react';
-import { Wand2, FileText, Loader2, Plus } from 'lucide-react';
+import { Brain, Sparkles, BookOpen, ArrowRight, Shuffle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
-import { HfInference } from '@huggingface/inference';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
+import SubjectManagement from '@/components/SubjectManagement';
 
-// Initialize Hugging Face client
-const hf = new HfInference();
+interface Flashcard {
+  question: string;
+  answer: string;
+}
 
 const FlashcardGenerator = () => {
   const [studyNotes, setStudyNotes] = useState('');
+  const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [flashcards, setFlashcards] = useState<Array<{question: string, answer: string}>>([]);
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string>('');
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const generateFlashcards = async () => {
     if (!studyNotes.trim()) {
-      toast.error('Please enter your study notes first');
+      toast({
+        title: "Error",
+        description: "Please enter some study notes to generate flashcards.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!selectedSubjectId) {
+      toast({
+        title: "Subject Required",
+        description: "Please select a subject before generating flashcards.",
+        variant: "destructive",
+      });
       return;
     }
 
     setIsGenerating(true);
     
     try {
-      // Use Hugging Face Question Answering API
-      const prompt = `Based on the following study material, generate 3-5 educational flashcards in JSON format. Each flashcard should have a "question" and "answer" field. Focus on key concepts, definitions, and important facts.
-
-Study Material: ${studyNotes}
-
-Format your response as a JSON array of objects like this:
-[{"question": "What is...?", "answer": "The answer is..."}]`;
-
-      const response = await hf.textGeneration({
-        model: 'microsoft/DialoGPT-medium',
-        inputs: prompt,
-        parameters: {
-          max_new_tokens: 500,
-          temperature: 0.7,
+      const { data, error } = await supabase.functions.invoke('generate-flashcards', {
+        body: { 
+          studyNotes: studyNotes.trim(),
+          userId: user?.id,
+          subjectId: selectedSubjectId
         }
       });
 
-      // Parse the response and extract flashcards
-      let flashcardsData = [];
-      try {
-        // Try to extract JSON from the response
-        const jsonMatch = response.generated_text.match(/\[.*\]/s);
-        if (jsonMatch) {
-          flashcardsData = JSON.parse(jsonMatch[0]);
-        } else {
-          throw new Error('No JSON found');
-        }
-      } catch (parseError) {
-        // Fallback: create flashcards from text analysis
-        const lines = studyNotes.split('\n').filter(line => line.trim());
-        flashcardsData = lines.slice(0, 3).map((line, index) => ({
-          question: `What can you tell me about: ${line.substring(0, 50)}...?`,
-          answer: line.trim()
-        }));
-      }
+      if (error) throw error;
 
-      setFlashcards(flashcardsData);
-      toast.success(`Generated ${flashcardsData.length} flashcards successfully!`);
-      
-    } catch (error) {
+      if (data?.flashcards) {
+        setFlashcards(data.flashcards);
+        toast({
+          title: "Success!",
+          description: `Generated ${data.flashcards.length} flashcards from your notes.`,
+        });
+        
+        // Clear the notes after successful generation
+        setStudyNotes('');
+      } else {
+        throw new Error('No flashcards generated');
+      }
+    } catch (error: any) {
       console.error('Error generating flashcards:', error);
-      // Fallback to local processing
-      const lines = studyNotes.split('\n').filter(line => line.trim());
-      const fallbackCards = lines.slice(0, 3).map((line, index) => ({
-        question: `What is the key concept in: "${line.substring(0, 40)}..."?`,
-        answer: line.trim()
-      }));
-      
-      setFlashcards(fallbackCards);
-      toast.success(`Generated ${fallbackCards.length} flashcards from your notes!`);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to generate flashcards. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <section className="py-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Generate Your <span className="text-hero inline">AI Flashcards</span>
-          </h2>
-          <p className="text-subtitle max-w-2xl mx-auto">
-            Paste your study notes below and watch as AI transforms them into interactive flashcards
-          </p>
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="text-center mb-8">
+        <div className="inline-flex p-4 rounded-full bg-primary/10 text-primary mb-4">
+          <Brain className="w-8 h-8" />
         </div>
+        <h1 className="text-3xl font-bold mb-2">AI Flashcard Generator</h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Transform your study notes into intelligent flashcards using advanced AI. 
+          Perfect for exam preparation and knowledge retention.
+        </p>
+      </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          {/* Input Section */}
-          <div className="study-card">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <FileText className="w-5 h-5 text-primary" />
-              </div>
-              <h3 className="text-card-title">Your Study Notes</h3>
-            </div>
+      {/* Subject Management Section */}
+      <div className="mb-8">
+        <SubjectManagement 
+          onSubjectSelect={setSelectedSubjectId}
+          selectedSubjectId={selectedSubjectId}
+        />
+      </div>
 
-            <div className="space-y-4">
+      {/* Subject Selection Alert */}
+      {!selectedSubjectId && (
+        <Alert className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Please select or create a subject above to organize your flashcards before generating new ones.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Input Section */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5" />
+                Study Notes
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <Textarea
-                placeholder="Paste your study notes here... 
-
-Example:
-- Photosynthesis is the process by which plants convert sunlight into energy
-- It occurs in the chloroplasts of plant cells
-- The equation is: 6CO2 + 6H2O + light energy → C6H12O6 + 6O2
-- There are two main stages: light reactions and the Calvin cycle"
+                placeholder="Paste your study notes, lecture content, or any text you want to convert into flashcards..."
                 value={studyNotes}
                 onChange={(e) => setStudyNotes(e.target.value)}
-                className="study-input min-h-[300px] resize-none"
+                rows={12}
+                className="resize-none study-input"
+                disabled={!selectedSubjectId}
               />
-
+              
               <Button 
                 onClick={generateFlashcards}
-                disabled={isGenerating}
+                disabled={isGenerating || !studyNotes.trim() || !selectedSubjectId}
                 className="w-full btn-hero"
               >
                 {isGenerating ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    <Brain className="w-4 h-4 mr-2 animate-spin" />
                     Generating Flashcards...
                   </>
                 ) : (
                   <>
-                    <Wand2 className="w-5 h-5 mr-2" />
+                    <Sparkles className="w-4 h-4 mr-2" />
                     Generate Flashcards
                   </>
                 )}
               </Button>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
+        </div>
 
-          {/* Preview Section */}
-          <div className="study-card">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-secondary/10">
-                <Plus className="w-5 h-5 text-secondary" />
-              </div>
-              <h3 className="text-card-title">Generated Flashcards</h3>
-              {flashcards.length > 0 && (
-                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-accent/10 text-accent">
-                  {flashcards.length} cards
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-4">
+        {/* Flashcards Preview Section */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shuffle className="w-5 h-5" />
+                Generated Flashcards
+                {flashcards.length > 0 && (
+                  <Badge variant="secondary" className="ml-2">
+                    {flashcards.length} cards
+                  </Badge>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               {flashcards.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted/50 flex items-center justify-center">
-                    <Wand2 className="w-8 h-8" />
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Brain className="w-8 h-8 text-primary" />
                   </div>
-                  <p>Your generated flashcards will appear here</p>
+                  <h3 className="text-lg font-medium mb-2">No flashcards yet</h3>
+                  <p className="text-muted-foreground">
+                    Enter your study notes and click generate to create AI-powered flashcards
+                  </p>
                 </div>
               ) : (
-                flashcards.map((card, index) => (
-                  <div key={index} className="relative">
-                    <FlashcardPreview question={card.question} answer={card.answer} />
+                <div className="space-y-4">
+                  {flashcards.map((card, index) => (
+                    <FlashcardPreview 
+                      key={index} 
+                      question={card.question} 
+                      answer={card.answer} 
+                    />
+                  ))}
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => window.location.href = '/test-knowledge'}
+                    >
+                      <ArrowRight className="w-4 h-4 mr-2" />
+                      Test Knowledge
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => setFlashcards([])}
+                    >
+                      Clear All
+                    </Button>
                   </div>
-                ))
+                </div>
               )}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
@@ -182,15 +223,15 @@ const FlashcardPreview: React.FC<{question: string, answer: string}> = ({ questi
       <div className="flashcard-inner">
         <div className="flashcard-front">
           <div className="space-y-4">
-            <div className="text-xs font-semibold text-primary uppercase tracking-wide">Question</div>
-            <p className="text-lg font-medium text-foreground">{question}</p>
+            <Badge variant="secondary" className="text-xs">Question</Badge>
+            <p className="text-base font-medium">{question}</p>
             <div className="text-xs text-muted-foreground">Click to reveal answer</div>
           </div>
         </div>
         <div className="flashcard-back">
           <div className="space-y-4">
-            <div className="text-xs font-semibold text-accent uppercase tracking-wide">Answer</div>
-            <p className="text-base text-foreground leading-relaxed">{answer}</p>
+            <Badge className="text-xs bg-accent text-accent-foreground">Answer</Badge>
+            <p className="text-sm leading-relaxed">{answer}</p>
             <div className="text-xs text-muted-foreground">Click to see question</div>
           </div>
         </div>

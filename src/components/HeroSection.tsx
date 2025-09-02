@@ -139,6 +139,14 @@ const HeroSection = () => {
               Test Your Knowledge
             </button>
           )}
+          {user && (
+            <button 
+              className="btn-secondary"
+              onClick={() => window.location.href = '/upgrade'}
+            >
+              Upgrade to Premium
+            </button>
+          )}
           <button 
             className="btn-secondary"
             onClick={() => window.location.href = '/demo'}

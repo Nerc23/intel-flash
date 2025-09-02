@@ -7,19 +7,19 @@ const PricingSection = () => {
   const plans = [
     {
       name: 'Free',
-      price: '$0',
+      price: 'R0',
       period: 'forever',
       description: 'Perfect for getting started',
       icon: <Sparkles className="w-6 h-6" />,
       features: [
-        'Unlimited flashcard creation',
-        'Up to 3 subjects',
+        'Unlimited flashcard creation daily',
+        'Up to 3 subjects only',
         'Basic AI generation',
         'Mobile responsive design',
-        'Export to text'
+        'Basic testing modes'
       ],
       limitations: [
-        'Limited to 3 subjects',
+        'Limited to 3 subjects maximum',
         'Basic AI models only'
       ],
       buttonText: 'Start Free',
@@ -28,19 +28,21 @@ const PricingSection = () => {
     },
     {
       name: 'Premium',
-      price: '$9.99',
+      price: 'R50',
       period: 'per month',
+      yearlyPrice: 'R550/year (Save R50)',
       description: 'Unlimited learning potential',
       icon: <Crown className="w-6 h-6" />,
       features: [
-        'Unlimited flashcard creation',
+        'Unlimited flashcard creation daily',
         'Unlimited subjects',
         'Advanced AI models',
         'Smart spaced repetition',
         'Progress analytics',
         'Export to multiple formats',
         'Priority support',
-        'Offline access'
+        'Advanced testing modes',
+        'Custom categories & tags'
       ],
       limitations: [],
       buttonText: 'Upgrade to Premium',
@@ -86,6 +88,11 @@ const PricingSection = () => {
                     <span className="text-4xl font-bold">{plan.price}</span>
                     <span className="text-muted-foreground">/{plan.period}</span>
                   </div>
+                  {plan.yearlyPrice && (
+                    <div className="text-sm text-accent font-medium mb-2">
+                      {plan.yearlyPrice}
+                    </div>
+                  )}
                   <p className="text-card-content">{plan.description}</p>
                 </div>
 
@@ -117,7 +124,7 @@ const PricingSection = () => {
                 {/* CTA Button */}
                 <Button 
                   className={`w-full ${plan.buttonVariant === 'hero' ? 'btn-hero' : 'btn-secondary'}`}
-                  onClick={() => window.location.href = plan.popular ? '/generator' : '/demo'}
+                  onClick={() => window.location.href = plan.popular ? '/upgrade' : '/auth'}
                 >
                   {plan.popular && <Zap className="w-4 h-4 mr-2" />}
                   {plan.buttonText}

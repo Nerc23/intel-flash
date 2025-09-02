@@ -9,6 +9,7 @@ import Generator from "./pages/Generator";
 import TestKnowledge from "./pages/TestKnowledge";
 import AccountSettings from "./pages/AccountSettings";
 import Auth from "./pages/Auth";
+import Upgrade from "./pages/Upgrade";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -36,6 +37,11 @@ const App = () => (
           <Route path="/account-settings" element={
             <ProtectedRoute>
               <AccountSettings />
+            </ProtectedRoute>
+          } />
+          <Route path="/upgrade" element={
+            <ProtectedRoute>
+              <Upgrade />
             </ProtectedRoute>
           } />
           <Route path="/auth" element={<Auth />} />

@@ -19,6 +19,7 @@ export type Database = {
           content: Json
           created_at: string | null
           id: string
+          subject_id: string | null
           title: string
           updated_at: string | null
           user_id: string
@@ -27,6 +28,7 @@ export type Database = {
           content: Json
           created_at?: string | null
           id?: string
+          subject_id?: string | null
           title: string
           updated_at?: string | null
           user_id: string
@@ -35,11 +37,20 @@ export type Database = {
           content?: Json
           created_at?: string | null
           id?: string
+          subject_id?: string | null
           title?: string
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "flashcards_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -67,6 +78,36 @@ export type Database = {
           id?: string
           plan_type?: string | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subjects: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

@@ -70,8 +70,12 @@ const PlanSelection = () => {
         description: `You've successfully selected the ${selectedPlan} plan.`,
       });
 
-      // Redirect to main app
-      window.location.href = '/generator';
+      // Redirect to appropriate page based on plan
+      if (selectedPlan === 'premium') {
+        window.location.href = '/upgrade';
+      } else {
+        window.location.href = '/generator';
+      }
     } catch (error: any) {
       toast({
         title: "Error",
